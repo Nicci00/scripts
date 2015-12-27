@@ -3,30 +3,33 @@
 from sys import stdout
 from time import sleep
 from ConfigParser import SafeConfigParser
-from xml.dom import minidom
-
+import xml.etree.ElementTree as ET 
 import json
 import requests
 
 parser = SafeConfigParser()
 parser.read('config.ini')
 
-def fetch_XML():
+def get_tree():
 	ice_user = parser.get('server', 'icecast_username')
 	ice_pass = parser.get('server', 'icecast_password')
 	ice_url = parser.get('server', 'xml_url')
-	
+
 	get = requests.get(ice_url, auth=(ice_user, ice_pass))
-	return minidom.parseString(get.text)
+	
+	if get.status_code != 200:
+		raise Exception("status code %s" % get.status_code)
+	else:
+		return ET.ElementTree(ET.fromstring(get.text))
 
 def getArtist():
-	return unicode(fetch_XML().getElementsByTagName('artist')[0].firstChild.data)
+	return unicode(get_tree().find(".//artist").text)
 
 def getTitle():
-	return unicode(fetch_XML().getElementsByTagName('title')[1].firstChild.data)
+	return unicode(get_tree().findall(".//title")[1].text)
 
 def getListeners(): 
-	return int(fetch_XML().getElementsByTagName('listeners')[0].firstChild.data)
+	return int(get_tree().find(".//listeners").text)
 
 artist = getArtist()
 title = getTitle()
