@@ -3,7 +3,7 @@
 from sys import stdout
 from time import sleep
 from ConfigParser import SafeConfigParser
-import xml.etree.ElementTree as ET 
+import xml.etree.ElementTree as ET
 import json
 import requests
 
@@ -16,7 +16,7 @@ def get_tree():
 	ice_url = parser.get('server', 'xml_url')
 
 	get = requests.get(ice_url, auth=(ice_user, ice_pass))
-	
+
 	if get.status_code != 200:
 		raise Exception("status code %s" % get.status_code)
 	else:
@@ -28,8 +28,9 @@ def getArtist():
 def getTitle():
 	return unicode(get_tree().findall(".//title")[1].text)
 
-def getListeners(): 
-	return int(get_tree().find(".//listeners").text)
+def getListeners():
+	nodes = get_tree().findall(".//listeners")
+	return int(nodes[1].text) + int(nodes[2].text)
 
 artist = getArtist()
 title = getTitle()
@@ -59,4 +60,6 @@ while True:
 		title = rf_title
 		listeners = rf_listeners
 
+		sleep(1)
+		
 		send_data()
