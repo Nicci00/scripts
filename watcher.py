@@ -48,8 +48,6 @@ def send_data():
 send_data()
 
 while True:
-	sleep(2)
-
 	rf_artist = getArtist()
 	rf_title = getTitle()
 	rf_listeners = getListeners()
@@ -61,5 +59,7 @@ while True:
 		listeners = rf_listeners
 
 		sleep(1)
-		
+
 		send_data()
+	else:
+		sleep(2)
