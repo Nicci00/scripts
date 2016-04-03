@@ -10,7 +10,7 @@ import requests
 parser = SafeConfigParser()
 parser.read('config.ini')
 
-def get_tree():
+def getTree():
 	ice_user = parser.get('server', 'icecast_username')
 	ice_pass = parser.get('server', 'icecast_password')
 	ice_url = parser.get('server', 'xml_url')
@@ -22,25 +22,25 @@ def get_tree():
 	else:
 		return ET.ElementTree(ET.fromstring(get.text))
 
-def getArtist():
-	return unicode(get_tree().find(".//artist").text)
+def getData():
 
-def getTitle():
-	return unicode(get_tree().findall(".//title")[1].text)
+	xmlTree = getTree()
 
-def getListeners():
-	nodes = get_tree().findall(".//listeners")
-	return int(nodes[1].text) + int(nodes[2].text)
+	nodes = getTree().findall(".//listeners")
 
-artist = getArtist()
-title = getTitle()
-listeners = getListeners()
+	return {
+		"artist" : unicode(xmlTree.find(".//artist").text),
+		"title" : unicode(xmlTree.findall(".//title")[1].text),
+		"listeners" : int(nodes[1].text) + int(nodes[2].text)
+	}
+
+data = getData()
 
 def send_data():
 	print(json.dumps({
-		'artist' : artist,
-		'title' : title,
-		'listeners' : listeners
+		'artist' : data["artist"],
+		'title' : data["title"],
+		'listeners' : data["listeners"]
 		}))
 
 	stdout.flush()
@@ -48,18 +48,16 @@ def send_data():
 send_data()
 
 while True:
-	rf_artist = getArtist()
-	rf_title = getTitle()
-	rf_listeners = getListeners()
 
-	if (artist != rf_artist) or (title != rf_title) or (listeners != rf_listeners):
+	sleep(3)
 
-		artist = rf_artist
-		title = rf_title
-		listeners = rf_listeners
+	rfData = getData()
 
-		sleep(1)
+	if rfData != data:
+
+		data = rfData
+
+		sleep(2)
 
 		send_data()
-	else:
-		sleep(2)
+
