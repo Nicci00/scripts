@@ -49,15 +49,12 @@ send_data()
 
 while True:
 
-	sleep(3)
-
+	sleep(2)
 	rfData = getData()
 
 	if rfData != data:
 
 		data = rfData
-
-		sleep(2)
-
+		sleep(1)
 		send_data()
 
