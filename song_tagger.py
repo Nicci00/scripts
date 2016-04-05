@@ -12,6 +12,8 @@ if len(sys.argv) == 1:
 
 files = filter(lambda x: x.endswith('.mp3'), sys.argv)
 
+use_chrom = '-c' in sys.argv 
+
 print "Got %d files for tagging" % len(files)
 
 for f in files:
@@ -29,7 +31,7 @@ for f in files:
 		print "Current artist is: \n" + file["artist"][0]
 		print '----------------'
 
-		if file["title"] and '-c' in sys.argv:
+		if file["title"] and use_chrom:
 
 			t = file["title"][0].replace(" ", "+")
 			url = "http://www.project-imas.com/w/index.php?search=%s" % t
