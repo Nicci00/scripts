@@ -6,13 +6,13 @@ import os
 from mutagen.easyid3 import EasyID3
 import subprocess
 
-files = sys.argv
-
 if len(sys.argv) == 1:
 	print("this script needs files to work")
 	sys.exit(1)
 
-files.pop(0)
+files = filter(lambda x: x.endswith('.mp3'), sys.argv)
+
+print "Got %d files for tagging" % len(files)
 
 for f in files:
 
@@ -29,12 +29,12 @@ for f in files:
 		print "Current artist is: \n" + file["artist"][0]
 		print '----------------'
 
-		if file["title"]:
+		if file["title"] and '-c' in sys.argv:
 
 			t = file["title"][0].replace(" ", "+")
 			url = "http://www.project-imas.com/w/index.php?search=%s" % t
 
-			print 'Opening new tab with %s' % url
+			print u'Opening new tab with search query \"%s\"' % file["title"][0]
 
 			with open(os.devnull, 'wb') as devnull:
 				subprocess.check_call(['chromium', url], stdout=devnull, stderr=subprocess.STDOUT)
