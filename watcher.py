@@ -37,11 +37,7 @@ def getData():
 data = getData()
 
 def send_data():
-	print(json.dumps({
-		'artist' : data["artist"],
-		'title' : data["title"],
-		'listeners' : data["listeners"]
-		}))
+	print(json.dumps(data))
 
 	stdout.flush()
 
@@ -57,4 +53,3 @@ while True:
 		data = rfData
 		sleep(1)
 		send_data()
-
