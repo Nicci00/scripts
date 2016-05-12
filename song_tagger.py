@@ -3,7 +3,7 @@
 
 import sys
 import os
-from mutagen.easyid3 import EasyID3
+import eyed3
 import subprocess
 
 if len(sys.argv) == 1:
@@ -12,7 +12,7 @@ if len(sys.argv) == 1:
 
 files = filter(lambda x: x.endswith('.mp3'), sys.argv)
 
-use_chrom = '-c' in sys.argv 
+use_chrom = '-c' in sys.argv
 
 print "Got %d files for tagging" % len(files)
 
@@ -23,33 +23,36 @@ for f in files:
 		pass
 
 	else:
-		file = EasyID3(f)
-	
+		file = eyed3.load(f)
+
 		print '\n----------------'
 		print 'Filename: \n' + f
-		print "Current title is: \n" + file["title"][0]
-		print "Current artist is: \n" + file["artist"][0]
+		print "Current title is: \n" + file.tag.title
+		print "Current artist is: \n" + file.tag.artist
 		print '----------------'
 
-		if file["title"] and use_chrom:
+		if file.tag.title and use_chrom:
 
-			t = file["title"][0].replace(" ", "+")
+			t = file.tag.title.replace(" ", "+")
 			url = "http://www.project-imas.com/w/index.php?search=%s" % t
 
-			print u'Opening new tab with search query \"%s\"' % file["title"][0]
+			print u'Opening new tab with search query \"%s\"' % file.tag.title
 
+			#chromium in arch, chromium-browser in ubuntu
 			with open(os.devnull, 'wb') as devnull:
-				subprocess.check_call(['chromium', url], stdout=devnull, stderr=subprocess.STDOUT)
+				subprocess.check_call(['chromium-browser',
+					url], stdout=devnull, stderr=subprocess.STDOUT)
 
-	
-		new_title = raw_input("Enter new title or press enter to leave it as is -> ")
-		
-		if (new_title != ''):
-			file["title"] = [new_title.decode('utf-8')]
-			file.save()
-	
-		new_artist = raw_input("Enter new artist or press enter to leave it as is -> ")
-		
-		if (new_artist != ''):
-			file["artist"] = [new_artist.decode('utf-8')]
-			file.save()
+		new_title = raw_input(
+			"Enter new title or press enter to leave it as is -> ")
+
+		if (new_title):
+			file.tag.title = new_title.decode('utf-8')
+			file.tag.save()
+
+		new_artist = raw_input(
+			"Enter new artist or press enter to leave it as is -> ")
+
+		if (new_artist):
+			file.tag.artist = new_artist.decode('utf-8')
+			file.tag.save()
