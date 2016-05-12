@@ -1,11 +1,11 @@
 Various scripts used in shijou.moe and for the administration of shijou.moe/imas-radio
 
 Contains:
-- imas-radio.liq: 
+- imas-radio.liq:
 Liquidsoap script that controls the radio
 
-- song_tagger.py: 
-Script to retag artist and title on mp3 files. Needs mutagen to work.
+- song_tagger.py:
+Script to retag artist and title on mp3 files. Needs eyed3 to work.
 
 - renamer.py:
 Changes the first two char of a file to random digits.
