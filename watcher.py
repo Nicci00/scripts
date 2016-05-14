@@ -56,7 +56,6 @@ def send_tunein_data():
 
 def watcher():
 	global data
-	global debug
 
 	while True:
 		sleep(2)
@@ -69,8 +68,6 @@ def watcher():
 
 
 if __name__ == '__main__':
-
-	debug = sys.argv[1] == '--debug'
 
 	data = getData()
 
