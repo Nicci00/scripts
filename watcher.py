@@ -26,7 +26,7 @@ def getData():
 
 	xmlTree = getTree()
 
-	nodes = getTree().findall(".//listeners")
+	nodes = xmlTree.findall(".//listeners")
 
 	return {
 		"artist" : unicode(xmlTree.find(".//artist").text),
