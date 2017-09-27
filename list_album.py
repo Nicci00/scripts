@@ -8,10 +8,10 @@ albums = []
 
 for file in files:
 	f = EasyID3(file)
-	album = unicode(f['album'][0])
+	album = f['album'][0]
 	if album not in albums:
 		albums.append(album)
 
-for a in albums: print a
+[print(a) for a in albums]
 
 sys.exit(0)

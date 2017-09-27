@@ -1,14 +1,15 @@
-#!/usr/bin/env python
-
 from sys import stdout
 from time import sleep
-from ConfigParser import SafeConfigParser
+import configparser
 import xml.etree.ElementTree as ET
 import json
 import requests
 
-parser = SafeConfigParser()
+parser = configparser.ConfigParser();
+
 parser.read('config.ini')
+
+data = None
 
 def getTree():
 	ice_user = parser.get('server', 'icecast_username')
@@ -34,22 +35,28 @@ def getData():
 		"listeners" : int(nodes[1].text) + int(nodes[2].text)
 	}
 
-data = getData()
-
 def send_data():
 	print(json.dumps(data))
 
 	stdout.flush()
 
-send_data()
 
-while True:
+def main():
+	global data
+	send_data()
+	
+	while True:
+	
+		sleep(2)
+		rfData = getData()
+	
+		if rfData != data:
+	
+			data = rfData
+			sleep(1)
+			send_data()
+	
 
-	sleep(2)
-	rfData = getData()
 
-	if rfData != data:
-
-		data = rfData
-		sleep(1)
-		send_data()
+if __name__ == '__main__':
+	main()
