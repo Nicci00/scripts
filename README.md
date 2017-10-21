@@ -14,4 +14,4 @@ Changes the first two char of a file to random digits.
 Lists all unique albums present in a folder. Needs mutagen.
 
 - watcher.py:
-Detects changes on the steam metadata and sends them to STDOUT in JSON format. To be used toghether with websocketify.
+Development have been moved to shijou.moe repo.
