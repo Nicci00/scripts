@@ -1,5 +1,7 @@
 import sys
 import os
+import mutagen
+
 from mutagen.easyid3 import EasyID3
 import subprocess
 
@@ -19,7 +21,17 @@ def main():
 			pass
 	
 		else:
-			file = EasyID3(f)
+			file = None
+
+			try:
+				file = EasyID3(f)
+			except mutagen.id3.ID3NoHeaderError as e:
+				file = mutagen.File(f, easy=True)
+				file.add_tags()
+				file["TALB"][0] = [""]
+				file["album"][0] =  [""]
+				file["title"][0] =  [""]
+				file["artist"][0] = [""]
 			
 			print('\n----------------')
 			print( str(i) + ' of ' + str(l))
